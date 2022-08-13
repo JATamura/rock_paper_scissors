@@ -53,5 +53,6 @@ class manual_rps:
         else: 
             print("It was a tie!")
 
-rps = manual_rps()
-rps.play()
+if __name__ == "__main__":
+    rps = manual_rps()
+    rps.play()
