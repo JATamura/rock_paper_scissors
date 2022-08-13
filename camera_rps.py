@@ -7,7 +7,7 @@ import time
 class camera_rps:
 
     def __init__(self):
-        self.options = ["rock", "paper", "scissors"]
+        self.options = ["rock", "paper", "scissors", "nothing"]
         self.model = load_model('keras_model.h5')
         self.user_wins = 0
         self.computer_wins = 0
@@ -46,16 +46,12 @@ class camera_rps:
         return prediction
 
     def get_computer_choice(self):
-        return random.choice(self.options)
+        return random.choice(self.options[:-1])
 
     def get_user_choice(self, prediction):
         choice = np.argmax(prediction)
-        if choice < 3:
-            print("you chose " + self.options[choice])
-            return self.options[choice] 
-        else:
-            print("you chose nothing")
-            return "nothing"
+        print("you chose " + self.options[choice])
+        return self.options[choice]
 
     def get_winner(self, computer_choice , user_choice):
         if user_choice  == "rock":
