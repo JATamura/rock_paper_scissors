@@ -6,9 +6,7 @@
 
 ## Milestone 2: Create the model
 
-- Using Teachable-Machine, a keras model was created. It used images taken with myself showing the following options to the camera: rock, paper, scissors, nothing. The 'nothing' class was when no movement was made that was significant to the game itself.
-
-- HOW WILL I USE IT 
+- Using Teachable-Machine, a keras model was created. It used images taken with myself showing the following options to the camera: rock, paper, scissors, nothing. The 'nothing' class was when no movement was made that was significant to the game itself. This model would be loaded into an Anaconda virtual environment and used to determine what action was chosen from the image taken by the computer's webcam.
 
 ## Milestone 3: Install the dependencies
 
@@ -108,20 +106,45 @@ def get_winner(self, computer_choice , user_choice):
         else:
             return 0
 ```
+- Once the winner is selected, the program would print *"You won!"*, *"You lost!"*, or *"It was a tie!"* dependning on the outcome.
 
 ## Milestone 5: Use the camera to play Rock-Paper-Scissors
 
+- By adjusting the code given in milestone 3, it could be inserted into the rock paper scissors game to use the webcam instead of a text based input. The model would be loaded outside of this get_prediction method and instead would be loaded as a class variabel when initializing the game.
+
 ```python
 def get_prediction(self):
-        model = load_model('keras_model.h5')
-        cap = cv2.VideoCapture(0)
-        data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
+    cap = cv2.VideoCapture(0)
+    data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
+    print("press r when ready")
+    while True: 
         ret, frame = cap.read()
-        resized_frame = cv2.resize(frame, (224, 224), interpolation = cv2.INTER_AREA)
-        image_np = np.array(resized_frame)
-        normalized_image = (image_np.astype(np.float32) / 127.0) - 1 # Normalize the image
-        data[0] = normalized_image
-        prediction = model.predict(data)
         cv2.imshow('frame', frame)
-        return prediction[0]
+        if cv2.waitKey(1) & 0xFF == ord('r'):
+            break
+    countdown = 4
+    predict_once = 0
+    start = time.time()
+    while True: 
+        ret, frame = cap.read()
+        if countdown > 1:
+            cv2.putText(frame, str(countdown - 1), (236, 316), cv2.FONT_HERSHEY_SIMPLEX, 8, (255, 255, 255), 20)
+        cv2.imshow('frame', frame)  
+        if time.time() > start - countdown + 5 and countdown > 0:
+            if countdown > 1:
+                print(countdown - 1)
+            countdown -= 1
+        elif countdown == 0 and predict_once == 0:
+            resized_frame = cv2.resize(frame, (224, 224), interpolation = cv2.INTER_AREA)
+            image_np = np.array(resized_frame)
+            normalized_image = (image_np.astype(np.float32) / 127.0) - 1 # Normalize the image
+            data[0] = normalized_image
+            prediction = self.model.predict(data)
+            predict_once = 1
+            print("press c to continue")
+        if cv2.waitKey(1) & 0xFF == ord('c') and countdown == 0:
+            break
+    return prediction
 ```
+
+- The first while loop in the turns the camera on and keeps it on during down time between rounds of the game. When the 'r' key is pressed, a 4 seconds countdown (3, 2, 1, 0) will be started and displayed on the webcam display, upon which the image captured by the webcam at the end of the countdown would be used as the image to be parsed on into the model. The time.time() method was used to store the time that the countdown was started and in the seconds while loop, an if statement was used to print said countdown. After predicting the action presented in the image, *"press c to continue"* was printed. When the 'c' key is pressed, the prediction is used to get the user choice and find the winner.
