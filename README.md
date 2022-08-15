@@ -84,27 +84,14 @@ def get_user_choice(self):
 
 ```python
 def get_winner(self, computer_choice , user_choice):
-    if computer_choice  == "rock":
-        if user_choice == "rock":
+        if user_choice == "nothing":
+            return 2
+        elif user_choice == computer_choice:
             return 0
-        elif user_choice == "paper":
+        elif (user_choice  == "rock" and computer_choice == "scissors") or (user_choice  == "paper" and computer_choice == "rock") or (user_choice  == "scissors" and computer_choice == "paper"):
             return 1
         else:
             return -1
-    elif computer_choice  == "paper":
-        if user_choice == "rock":
-            return -1
-        elif user_choice == "paper":
-            return 0
-        else:
-            return 1
-    else:
-        if user_choice == "rock":
-            return 1
-        elif user_choice == "paper":
-            return -1
-        else:
-            return 0
 ```
 - Once the winner is selected, the program would print *"You won!"*, *"You lost!"*, or *"It was a tie!"* dependning on the outcome.
 
