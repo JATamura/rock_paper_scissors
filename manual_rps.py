@@ -19,27 +19,14 @@ class manual_rps:
         return choice
 
     def get_winner(self, computer_choice , user_choice):
-        if computer_choice  == "rock":
-            if user_choice == "rock":
-                return 0
-            elif user_choice == "paper":
-                return 1
-            else:
-                return -1
-        elif computer_choice  == "paper":
-            if user_choice == "rock":
-                return -1
-            elif user_choice == "paper":
-                return 0
-            else:
-                return 1
+        if user_choice == "nothing":
+            return 2
+        elif user_choice == computer_choice:
+            return 0
+        elif (user_choice  == "rock" and computer_choice == "scissors") or (user_choice  == "paper" and computer_choice == "rock") or (user_choice  == "scissors" and computer_choice == "paper"):
+            return 1
         else:
-            if user_choice == "rock":
-                return 1
-            elif user_choice == "paper":
-                return -1
-            else:
-                return 0
+            return -1
 
     def play(self):
         computer_choice = self.get_computer_choice()
